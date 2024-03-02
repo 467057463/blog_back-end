@@ -6,7 +6,7 @@ module.exports = appInfo => {
       password: 'nandudu_',
       host: '127.0.0.1',
       port: 3306,
-      database: 'learning_development',
+      database: 'blog_development',
     },
   };
 };
