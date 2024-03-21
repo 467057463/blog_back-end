@@ -8,8 +8,11 @@
   },
   "dependencies": {
     "egg": "^3.17.5",
+    "egg-bcrypt": "^1.1.0",
+    "egg-jwt": "^3.1.7",
     "egg-scripts": "2",
     "egg-sequelize": "^6.0.0",
+    "egg-validate": "^2.0.2",
     "mysql2": "^3.9.1"
   },
   "devDependencies": {

@@ -14,10 +14,18 @@ module.exports = app => {
       type: app.Sequelize.DataTypes.STRING(16),
       allowNull: false,
       unique: true,
+      validate: {
+        len: [ 6 ],
+      },
     },
     password: {
-      type: app.Sequelize.DataTypes.STRING(32),
+      type: app.Sequelize.DataTypes.STRING(64),
       allowNull: false,
+    },
+    isAdmin: {
+      type: app.Sequelize.DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
     },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,

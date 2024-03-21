@@ -19,9 +19,14 @@ module.exports = {
         unique: true,
       },
       password: {
-        type: Sequelize.DataTypes.STRING(32),
+        type: Sequelize.DataTypes.STRING(64),
         field: 'password',
         allowNull: false,
+      },
+      isAdmin: {
+        type: Sequelize.DataTypes.BOOLEAN,
+        field: 'is_admin',
+        allowNull: true,
       },
       createdAt: {
         type: Sequelize.DataTypes.DATE,

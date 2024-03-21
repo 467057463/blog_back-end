@@ -20,18 +20,17 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1706712360203_3983';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [ 'errorHandler' ];
 
   // add your user config here
   const userConfig = {
-    // myAppName: 'egg',
-    // sequelize: {
-    //   dialect: 'mysql',
-    //   password: 'nandudu_',
-    //   host: '127.0.0.1',
-    //   port: 3306,
-    //   database: 'learning_development',
-    // },
+    validate: {
+      convert: true,
+    },
+
+    bcrypt: {
+      saltRounds: 10, // default 10
+    },
   };
 
   return {

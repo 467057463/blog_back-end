@@ -8,5 +8,12 @@ module.exports = appInfo => {
       port: 3306,
       database: 'blog_development',
     },
+
+
+    jwt: {
+      secret: 'jwt-123qweasd',
+      enable: true, // default is false
+      match: '/jwt', // optional
+    },
   };
 };

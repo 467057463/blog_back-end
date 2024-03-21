@@ -9,5 +9,20 @@ module.exports = {
     enable: true,
     package: 'egg-sequelize',
   },
+
+  validate: {
+    enable: true,
+    package: 'egg-validate',
+  },
+
+  bcrypt: {
+    enable: true,
+    package: 'egg-bcrypt',
+  },
+
+  jwt: {
+    enable: true,
+    package: 'egg-jwt',
+  },
 };
 

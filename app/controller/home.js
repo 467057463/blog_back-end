@@ -5,6 +5,7 @@ class HomeController extends Controller {
     const { ctx } = this;
     console.log(this.app.config);
     ctx.body = 'hi, eggs /n';
+    ctx.helper.success({ ctx, res: ctx.state.user.data.id });
   }
 }
 
