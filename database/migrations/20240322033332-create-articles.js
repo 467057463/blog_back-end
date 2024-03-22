@@ -3,8 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // const { INTEGER, DATE, STRING } = Sequelize;
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('articles', {
       id: {
         type: Sequelize.DataTypes.INTEGER.UNSIGNED,
         field: 'id',
@@ -12,22 +11,15 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
-      username: {
-        type: Sequelize.DataTypes.STRING(16),
-        field: 'username',
-        allowNull: false,
-        unique: true,
-      },
-      password: {
+      title: {
         type: Sequelize.DataTypes.STRING(64),
-        field: 'password',
-        allowNull: false,
+        field: 'title',
       },
-      // isAdmin: {
-      //   type: Sequelize.DataTypes.BOOLEAN,
-      //   field: 'is_admin',
-      //   allowNull: true,
-      // },
+      content: Sequelize.DataTypes.TEXT,
+      authorId: {
+        type: Sequelize.DataTypes.INTEGER,
+        field: 'author_id',
+      },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
@@ -40,6 +32,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('users');
+    await queryInterface.dropTable('articles');
   },
 };

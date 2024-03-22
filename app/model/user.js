@@ -22,11 +22,11 @@ module.exports = app => {
       type: app.Sequelize.DataTypes.STRING(64),
       allowNull: false,
     },
-    isAdmin: {
-      type: app.Sequelize.DataTypes.BOOLEAN,
-      allowNull: true,
-      defaultValue: false,
-    },
+    // isAdmin: {
+    //   type: app.Sequelize.DataTypes.BOOLEAN,
+    //   allowNull: true,
+    //   defaultValue: false,
+    // },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,
     },
@@ -39,6 +39,10 @@ module.exports = app => {
     User.hasOne(app.model.Profile, {
       as: 'profile',
       foreignKey: 'user_id',
+    });
+    User.hasMany(app.model.Article, {
+      foreignKey: 'author_id',
+      as: 'articles',
     });
   };
 
