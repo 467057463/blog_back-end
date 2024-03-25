@@ -8,6 +8,9 @@ module.exports = app => {
   router.post('/register', controller.auth.register);
 
   router.get('/articles', controller.articles.index);
+  router.get('/articles/:id', controller.articles.show);
   router.post('/articles', app.jwt, controller.articles.create);
+  router.post('/articles/:id', app.jwt, controller.articles.update);
+  router.delete('/articles/:id', app.jwt, controller.articles.destroy);
   // router.resources('users', '/users', controller.users);
 };
