@@ -29,7 +29,7 @@ module.exports = app => {
   Article.associate = () => {
     Article.belongsTo(app.model.User, {
       as: 'author',
-      foreignKey: 'authorId',
+      foreignKey: 'author_id',
     });
   };
 

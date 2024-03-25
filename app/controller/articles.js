@@ -3,7 +3,14 @@ const { Controller } = require('egg');
 class ArticleController extends Controller {
   async index() {
     const { ctx } = this;
-    ctx.body = await ctx.model.Article.findAll({ include: ctx.model.User, as: 'author_id' });
+    ctx.body = await ctx.model.Article.findAll({
+      include: {
+        model: ctx.model.User,
+        as: 'author',
+        all: true,
+        nested: true,
+      },
+    });
   }
 
   async create() {
