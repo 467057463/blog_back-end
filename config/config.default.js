@@ -14,6 +14,7 @@ module.exports = appInfo => {
         enable: false,
       },
     },
+    proxy: true,
   };
 
   // use for cookie sign key, should change to your own and keep security

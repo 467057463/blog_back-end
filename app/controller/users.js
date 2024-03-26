@@ -71,6 +71,11 @@ class UserController extends Controller {
     const fields = {};
     const files = {};
 
+    const uploadDir = path.join(process.cwd(), 'upload');
+    if (!fs.existsSync) {
+      fs.mkdirSync(uploadDir);
+    }
+
     for await (const part of parts) {
       console.log('part===============');
       console.log(part);
@@ -79,7 +84,7 @@ class UserController extends Controller {
       } else {
         const { filename, fieldname, encoding, mime } = part;
         const targetPath = path.join(
-          path.join(process.cwd(), 'upload'),
+          uploadDir,
           randomUUID() + path.extname(filename)
         );
         await pipeline(part, fs.createWriteStream(targetPath, { recursive: true }));
