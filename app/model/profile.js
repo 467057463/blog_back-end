@@ -4,6 +4,12 @@ module.exports = app => {
   // const { STRING, INTEGER, DATE } = app.Sequelize;
 
   const Profile = app.model.define('profile', {
+    id: {
+      type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false,
+    },
     name: {
       type: app.Sequelize.DataTypes.STRING(16),
     },
@@ -12,7 +18,6 @@ module.exports = app => {
     },
     email: {
       type: app.Sequelize.DataTypes.STRING(32),
-      primaryKey: true,
       unique: true,
     },
     intro: {

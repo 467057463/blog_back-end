@@ -4,6 +4,13 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('profiles', {
+      id: {
+        type: Sequelize.DataTypes.INTEGER.UNSIGNED,
+        field: 'id',
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
       name: {
         type: Sequelize.DataTypes.STRING(16),
         field: 'name',
@@ -15,7 +22,6 @@ module.exports = {
       email: {
         type: Sequelize.DataTypes.STRING(32),
         field: 'email',
-        primaryKey: true,
         unique: true,
       },
       intro: {
