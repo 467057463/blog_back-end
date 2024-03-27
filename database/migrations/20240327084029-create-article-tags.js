@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user_like_articles', {
+    await queryInterface.createTable('article_tags', {
       createdAt: {
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
@@ -12,11 +12,11 @@ module.exports = {
         type: Sequelize.DataTypes.DATE,
         field: 'updated_at',
       },
-      userId: {
+      tagId: {
         type: Sequelize.DataTypes.INTEGER.UNSIGNED,
-        field: 'user_id',
+        field: 'tag_id',
         references: {
-          model: 'users',
+          model: 'tags',
           key: 'id',
         },
       },
@@ -32,6 +32,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('user_like_articles');
+    await queryInterface.dropTable('article_tags');
   },
 };

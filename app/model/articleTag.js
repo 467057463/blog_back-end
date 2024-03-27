@@ -1,9 +1,9 @@
 'use strict';
 module.exports = app => {
-  const UserLikeArticles = app.model.define('userLikeArticles', {
-    userId: {
+  const ArticleTag = app.model.define('articleTag', {
+    tagId: {
       type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
-      field: 'user_id',
+      field: 'tag_id',
     },
     articleId: {
       type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
@@ -11,5 +11,5 @@ module.exports = app => {
     },
   });
 
-  return UserLikeArticles;
+  return ArticleTag;
 };

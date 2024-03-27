@@ -40,11 +40,12 @@ class ArticleController extends Controller {
 
   async create() {
     const { ctx } = this;
-    const { title, content } = ctx.request.body;
+    // 校验参数
+    ctx.validate(this.createArticleRule);
+
     const user = ctx.state.user;
     const article = await ctx.model.Article.create({
-      title,
-      content,
+      ...ctx.request.body,
       authorId: user.data.id,
     });
 

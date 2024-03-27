@@ -21,7 +21,11 @@ module.exports = app => {
       type: app.Sequelize.DataTypes.DATE,
     },
     authorId: {
-      type: app.Sequelize.DataTypes.INTEGER,
+      type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
+      allowNull: false,
+    },
+    categoryId: {
+      type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
       allowNull: false,
     },
   });
@@ -33,8 +37,18 @@ module.exports = app => {
     });
 
     Article.belongsToMany(app.model.User, {
-      through: app.model.UserLikeArticles,
+      through: app.model.UserLikeArticle,
       as: 'likeUsers',
+    });
+
+    Article.belongsToMany(app.model.Tag, {
+      through: app.model.ArticleTag,
+      as: 'tags',
+    });
+
+    Article.belongsTo(app.model.Category, {
+      as: 'category',
+      foreignKey: 'category_id',
     });
   };
 

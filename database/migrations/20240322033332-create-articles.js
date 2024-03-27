@@ -33,6 +33,14 @@ module.exports = {
         },
         comment: '作者id',
       },
+      categoryId: {
+        type: Sequelize.DataTypes.INTEGER.UNSIGNED,
+        field: 'category_id',
+        references: {
+          model: 'categories',
+          key: 'id',
+        },
+      },
     });
   },
 

@@ -40,7 +40,7 @@ module.exports = app => {
     });
 
     User.belongsToMany(app.model.Article, {
-      through: app.model.UserLikeArticles,
+      through: app.model.UserLikeArticle,
       as: 'likeArticles',
     });
   };
