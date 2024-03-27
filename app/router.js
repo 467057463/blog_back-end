@@ -15,5 +15,6 @@ module.exports = app => {
   router.post('/articles', app.jwt, controller.articles.create);
   router.post('/articles/:id', app.jwt, controller.articles.update);
   router.delete('/articles/:id', app.jwt, controller.articles.destroy);
+  router.post('/articles/:id/like', app.jwt, controller.articles.like);
   // router.resources('users', '/users', controller.users);
 };

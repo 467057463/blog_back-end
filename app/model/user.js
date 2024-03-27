@@ -33,9 +33,15 @@ module.exports = app => {
       as: 'profile',
       foreignKey: 'user_id',
     });
+
     User.hasMany(app.model.Article, {
       foreignKey: 'author_id',
       as: 'articles',
+    });
+
+    User.belongsToMany(app.model.Article, {
+      through: app.model.UserLikeArticles,
+      as: 'likeArticles',
     });
   };
 

@@ -80,6 +80,13 @@ class UserController extends Controller {
           model: this.ctx.model.Profile,
           as: 'profile',
         },
+        {
+          model: this.ctx.model.Article,
+          as: 'likeArticles',
+          attributes: {
+            exclude: [ 'author_id', 'authorId' ],
+          },
+        },
       ],
     });
   }

@@ -83,6 +83,27 @@ class ArticleController extends Controller {
     await article.destroy();
     ctx.status = 200;
   }
+
+  async like() {
+    const { ctx } = this;
+    const userId = ctx.state.user.data.id;
+    const article = await ctx.service.article.findById(ctx.params.id);
+
+    if (!article) {
+      ctx.throw(404, 'article not found');
+      return;
+    }
+
+    const user = await this.app.model.User.findByPk(userId);
+
+    if (await article.hasLikeUser(user)) {
+      ctx.throw(404, 'you alery like');
+      return;
+    }
+
+    article.addLikeUser(user);
+    ctx.body = 'success';
+  }
 }
 
 module.exports = ArticleController;

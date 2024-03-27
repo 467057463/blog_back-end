@@ -31,6 +31,11 @@ module.exports = app => {
       as: 'author',
       foreignKey: 'author_id',
     });
+
+    Article.belongsToMany(app.model.User, {
+      through: app.model.UserLikeArticles,
+      as: 'likeUsers',
+    });
   };
 
   return Article;
