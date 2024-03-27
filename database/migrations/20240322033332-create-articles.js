@@ -16,10 +16,6 @@ module.exports = {
         field: 'title',
       },
       content: Sequelize.DataTypes.TEXT,
-      authorId: {
-        type: Sequelize.DataTypes.INTEGER,
-        field: 'author_id',
-      },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
@@ -28,10 +24,19 @@ module.exports = {
         type: Sequelize.DataTypes.DATE,
         field: 'updated_at',
       },
+      authorId: {
+        type: Sequelize.DataTypes.INTEGER.UNSIGNED,
+        field: 'author_id',
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        comment: '作者id',
+      },
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('articles');
   },
 };

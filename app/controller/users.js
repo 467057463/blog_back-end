@@ -23,10 +23,6 @@ class UserController extends Controller {
     ctx.body = await ctx.model.User.findAll(query);
   }
 
-  async show() {
-    const ctx = this.ctx;
-    ctx.body = await ctx.model.User.findByPk(toInt(ctx.params.id));
-  }
 
   async create() {
     const ctx = this.ctx;
@@ -63,10 +59,42 @@ class UserController extends Controller {
     ctx.status = 200;
   }
 
+
+  async show() {
+    const ctx = this.ctx;
+    // 延迟加载
+    // const user = await ctx.model.User.findByPk(ctx.params.id);
+    // ctx.body = await user.getArticles();
+
+    // 预加载
+    ctx.body = await ctx.model.User.findByPk(ctx.params.id, {
+      include: [
+        {
+          model: this.ctx.model.Article,
+          as: 'articles',
+          attributes: {
+            exclude: [ 'author_id', 'authorId' ],
+          },
+        },
+        {
+          model: this.ctx.model.Profile,
+          as: 'profile',
+        },
+      ],
+    });
+  }
+
+
   async updateProfile() {
     const { ctx } = this;
     const parts = ctx.multipart();
     const currentUser = ctx.state.user.data.id;
+
+    // 一对一关联 直接设置null, 不会删除该条记录
+    // const u = await this.app.model.User.findByPk(currentUser);
+    // u.setProfile(null);
+    // ctx.body = 'success';
+    // return;
 
     const fields = {};
     const files = {};

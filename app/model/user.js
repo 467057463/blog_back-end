@@ -1,8 +1,6 @@
 'use strict';
 
 module.exports = app => {
-  // const { STRING, INTEGER, DATE } = app.Sequelize;
-
   const User = app.model.define('user', {
     id: {
       type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
@@ -22,11 +20,6 @@ module.exports = app => {
       type: app.Sequelize.DataTypes.STRING(64),
       allowNull: false,
     },
-    // isAdmin: {
-    //   type: app.Sequelize.DataTypes.BOOLEAN,
-    //   allowNull: true,
-    //   defaultValue: false,
-    // },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,
     },

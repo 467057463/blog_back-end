@@ -55,10 +55,15 @@ module.exports = {
       userId: {
         type: Sequelize.DataTypes.INTEGER.UNSIGNED,
         field: 'user_id',
+        references: {
+          model: 'users',
+          key: 'id',
+        },
+        comment: '用户id',
       },
     });
   },
-  down: async (queryInterface, Sequelize) => {
+  down: async queryInterface => {
     await queryInterface.dropTable('profiles');
   },
 };

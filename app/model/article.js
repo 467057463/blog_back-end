@@ -14,15 +14,15 @@ module.exports = app => {
       type: app.Sequelize.DataTypes.TEXT,
       allowNull: false,
     },
-    authorId: {
-      type: app.Sequelize.DataTypes.INTEGER,
-      allowNull: false,
-    },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,
     },
     updatedAt: {
       type: app.Sequelize.DataTypes.DATE,
+    },
+    authorId: {
+      type: app.Sequelize.DataTypes.INTEGER,
+      allowNull: false,
     },
   });
 

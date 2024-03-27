@@ -7,6 +7,8 @@ module.exports = app => {
   router.post('/login', controller.auth.login);
   router.post('/register', controller.auth.register);
   router.post('/update_profile', app.jwt, controller.users.updateProfile);
+  // 学习一对多关联
+  router.get('/users/:id', controller.users.show);
 
   router.get('/articles', controller.articles.index);
   router.get('/articles/:id', controller.articles.show);

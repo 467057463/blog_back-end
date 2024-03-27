@@ -3,7 +3,6 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    // const { INTEGER, DATE, STRING } = Sequelize;
     await queryInterface.createTable('users', {
       id: {
         type: Sequelize.DataTypes.INTEGER.UNSIGNED,
@@ -23,11 +22,6 @@ module.exports = {
         field: 'password',
         allowNull: false,
       },
-      // isAdmin: {
-      //   type: Sequelize.DataTypes.BOOLEAN,
-      //   field: 'is_admin',
-      //   allowNull: true,
-      // },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
@@ -39,7 +33,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('users');
   },
 };
