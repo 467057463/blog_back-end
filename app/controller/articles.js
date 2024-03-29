@@ -5,6 +5,7 @@ class ArticleController extends Controller {
     return {
       limit: 'int',
       page: 'int',
+      categoryId: 'int',
     };
   }
 
@@ -16,6 +17,9 @@ class ArticleController extends Controller {
       content: {
         type: 'string',
       },
+      categoryId: {
+        type: 'int',
+      },
     };
   }
 
@@ -24,13 +28,18 @@ class ArticleController extends Controller {
     // 校验参数
     ctx.validate(this.indexQueryRule, ctx.query);
     ctx.body = await ctx.service.article.findArticleList(ctx.query);
+
+    // if (ctx.query.tag) {
+    //   ctx.body = await ctx.service.article.findArticleByTag(ctx.query);
+    // } else {
+    //   ctx.body = await ctx.service.article.findArticleList(ctx.query);
+    // }
   }
 
   async show() {
     const { ctx } = this;
     const article = await ctx.service.article.findById(ctx.params.id);
     if (!article) {
-      // ctx.status = 404;
       ctx.throw(404, 'article not found');
     } else {
       ctx.body = article;
@@ -40,17 +49,24 @@ class ArticleController extends Controller {
 
   async create() {
     const { ctx } = this;
+    const user = ctx.state.user;
     // 校验参数
     ctx.validate(this.createArticleRule);
 
-    const user = ctx.state.user;
     const article = await ctx.model.Article.create({
       ...ctx.request.body,
       authorId: user.data.id,
     });
 
-    ctx.status = 201;
-    ctx.body = article;
+    const tags = await this.app.model.Tag.findAll({
+      where: {
+        name: ctx.request.body.tags,
+      },
+    });
+    await article.setTags(tags);
+
+    const res = await ctx.service.article.findById(article.id);
+    ctx.helper.success({ ctx, res });
   }
 
   async update() {
@@ -58,7 +74,6 @@ class ArticleController extends Controller {
     const user = ctx.state.user;
     const article = await ctx.service.article.findById(ctx.params.id);
     if (!article || article.authorId !== user.data.id) {
-      // ctx.status = 404;
       ctx.throw(404, 'article not found');
       return;
     }
@@ -68,7 +83,15 @@ class ArticleController extends Controller {
 
     await article.update(ctx.request.body);
 
-    ctx.body = article;
+    const tags = await this.app.model.Tag.findAll({
+      where: {
+        name: ctx.request.body.tags,
+      },
+    });
+    await article.setTags(tags);
+
+    const res = await ctx.service.article.findById(article.id);
+    ctx.helper.success({ ctx, res });
   }
 
   async destroy() {
@@ -104,6 +127,22 @@ class ArticleController extends Controller {
 
     article.addLikeUser(user);
     ctx.body = 'success';
+  }
+
+  async tags() {
+    this.ctx.body = await this.app.model.Tag.findAll({
+      attributes: {
+        exclude: [ 'createdAt', 'updatedAt' ],
+      },
+    });
+  }
+
+  async categories() {
+    this.ctx.body = await this.app.model.Category.findAll({
+      attributes: {
+        exclude: [ 'createdAt', 'updatedAt' ],
+      },
+    });
   }
 }
 
