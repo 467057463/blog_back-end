@@ -70,7 +70,6 @@ class AuthControll extends Controller {
     ctx.validate(this.registerRule);
     // 组装参数
     const payload = ctx.request.body || {};
-    delete payload.isAdmin;
     // 创建用户
     const user = await service.user.create(payload);
     // 生成 token

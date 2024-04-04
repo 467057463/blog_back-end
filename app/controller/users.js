@@ -7,58 +7,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const pipeline = util.promisify(stream.pipeline);
 
-function toInt(str) {
-  if (typeof str === 'number') return str;
-  if (!str) return str;
-  return parseInt(str, 10) || 0;
-}
 
 class UserController extends Controller {
-  // async index() {
-  //   const ctx = this.ctx;
-  //   const query = {
-  //     limit: toInt(ctx.query.limit),
-  //     offset: toInt(ctx.query.offset),
-  //   };
-  //   ctx.body = await ctx.model.User.findAll(query);
-  // }
-
-
-  // async create() {
-  //   const ctx = this.ctx;
-  //   const { name, age } = ctx.request.body;
-  //   const user = await ctx.model.User.create({ name, age });
-  //   ctx.status = 201;
-  //   ctx.body = user;
-  // }
-
-  // async update() {
-  //   const ctx = this.ctx;
-  //   const id = toInt(ctx.params.id);
-  //   const user = await ctx.model.User.findByPk(id);
-  //   if (!user) {
-  //     ctx.status = 404;
-  //     return;
-  //   }
-
-  //   const { name, age } = ctx.request.body;
-  //   await user.update({ name, age });
-  //   ctx.body = user;
-  // }
-
-  // async destroy() {
-  //   const ctx = this.ctx;
-  //   const id = toInt(ctx.params.id);
-  //   const user = await ctx.model.User.findByPk(id);
-  //   if (!user) {
-  //     ctx.status = 404;
-  //     return;
-  //   }
-
-  //   await user.destroy();
-  //   ctx.status = 200;
-  // }
-
 
   async show() {
     const ctx = this.ctx;
@@ -97,17 +47,11 @@ class UserController extends Controller {
     const parts = ctx.multipart();
     const currentUser = ctx.state.user.data.id;
 
-    // 一对一关联 直接设置null, 不会删除该条记录
-    // const u = await this.app.model.User.findByPk(currentUser);
-    // u.setProfile(null);
-    // ctx.body = 'success';
-    // return;
-
     const fields = {};
     const files = {};
 
     const uploadDir = path.join(process.cwd(), 'upload');
-    if (!fs.existsSync) {
+    if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir);
     }
 
@@ -128,23 +72,27 @@ class UserController extends Controller {
     }
     console.log(fields);
     console.log(files);
-    const user = await this.app.model.User.findByPk(currentUser, {
-      include: {
-        model: this.app.model.Profile,
-        as: 'profile',
-      },
-    });
+    const user = await this.app.model.User.findByPk(currentUser);
     const profile = await user.getProfile();
     if (!profile) {
-      await user.createProfile({ ...fields, ...files, user_id: currentUser });
+      await user.createProfile({
+        ...fields,
+        ...files,
+        user_id: currentUser,
+      });
     } else {
-      const originAvatar = path.join(process.cwd(), profile.avatar);
-      if (fs.existsSync(originAvatar)) {
+      const originAvatar = profile.avatar && path.join(process.cwd(), profile.avatar);
+      if (originAvatar && fs.existsSync(originAvatar)) {
         fs.rmSync(originAvatar);
       }
-      await profile.update({ ...fields, ...files, user_id: currentUser });
+      await profile.update({
+        ...fields,
+        ...files,
+        user_id: currentUser,
+      });
     }
-    ctx.body = await user.getProfile();
+    // ctx.body = await user.getProfile();
+    ctx.helper.success({ ctx, res: await user.getProfile(), msg: '更新成功' });
   }
 }
 

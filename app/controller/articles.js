@@ -27,13 +27,11 @@ class ArticleController extends Controller {
     const { ctx } = this;
     // 校验参数
     ctx.validate(this.indexQueryRule, ctx.query);
-    ctx.body = await ctx.service.article.findArticleList(ctx.query);
 
-    // if (ctx.query.tag) {
-    //   ctx.body = await ctx.service.article.findArticleByTag(ctx.query);
-    // } else {
-    //   ctx.body = await ctx.service.article.findArticleList(ctx.query);
-    // }
+    ctx.helper.success({
+      ctx,
+      res: await ctx.service.article.findArticleList(ctx.query),
+    });
   }
 
   async show() {
@@ -42,8 +40,10 @@ class ArticleController extends Controller {
     if (!article) {
       ctx.throw(404, 'article not found');
     } else {
-      ctx.body = article;
-      ctx.status = 201;
+      ctx.helper.success({
+        ctx,
+        res: article,
+      });
     }
   }
 
@@ -99,13 +99,15 @@ class ArticleController extends Controller {
     const user = ctx.state.user;
     const article = await ctx.service.article.findById(ctx.params.id);
     if (!article || article.authorId !== user.data.id) {
-      // ctx.status = 404;
       ctx.throw(404, 'article not found');
       return;
     }
 
     await article.destroy();
-    ctx.status = 200;
+    ctx.helper.success({
+      ctx,
+      msg: '删除成功',
+    });
   }
 
   async like() {
@@ -125,23 +127,36 @@ class ArticleController extends Controller {
       return;
     }
 
-    article.addLikeUser(user);
-    ctx.body = 'success';
+    await article.addLikeUser(user);
+    ctx.helper.success({
+      ctx,
+      msg: '点赞成功',
+    });
   }
 
   async tags() {
-    this.ctx.body = await this.app.model.Tag.findAll({
+    const { ctx } = this;
+    const res = await this.app.model.Tag.findAll({
       attributes: {
         exclude: [ 'createdAt', 'updatedAt' ],
       },
     });
+    ctx.helper.success({
+      ctx,
+      res,
+    });
   }
 
   async categories() {
-    this.ctx.body = await this.app.model.Category.findAll({
+    const { ctx } = this;
+    const res = await this.app.model.Category.findAll({
       attributes: {
         exclude: [ 'createdAt', 'updatedAt' ],
       },
+    });
+    ctx.helper.success({
+      ctx,
+      res,
     });
   }
 }

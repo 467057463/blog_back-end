@@ -22,13 +22,6 @@ class Article extends Service {
           attributes: {
             exclude: [ 'createdAt', 'updatedAt' ],
           },
-          // on: {
-          //   name: {
-          //     [this.app.Sequelize.Op.eq]: tag,
-          //   },
-          // },
-          // required: false,
-          // duplicating: false,
           through: {
             attributes: [],
           },
@@ -57,15 +50,29 @@ class Article extends Service {
 
   async findById(id) {
     return this.app.model.Article.findByPk(id, {
-      include: {
-        model: this.ctx.model.User,
-        as: 'author',
-        all: true,
-        nested: true,
-        attributes: {
-          exclude: [ 'password', 'createdAt', 'updatedAt' ],
+      include: [
+        {
+          model: this.ctx.model.User,
+          as: 'author',
+          attributes: {
+            exclude: [ 'password', 'createdAt', 'updatedAt' ],
+          },
+          include: {
+            model: this.ctx.model.Profile,
+            as: 'profile',
+          },
         },
-      },
+        {
+          model: this.ctx.model.Tag,
+          as: 'tags',
+          attributes: {
+            exclude: [ 'createdAt', 'updatedAt' ],
+          },
+          through: {
+            attributes: [],
+          },
+        },
+      ],
     });
   }
 
