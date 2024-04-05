@@ -14,6 +14,12 @@ module.exports = appInfo => {
         enable: false,
       },
     },
+
+    jwt: {
+      secret: 'jwt-123qweasd',
+      enable: true, // default is false
+      match: '/jwt', // optional
+    },
   };
 
   // use for cookie sign key, should change to your own and keep security

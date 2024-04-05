@@ -1,0 +1,34 @@
+name: BLOG_API CI/CD
+
+on:
+  push:
+    branches:
+      - stage
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm --help
+            cd /var/www/blog_back-end-stage
+            git pull origin stage
+            git status
+            npm install
+            npx sequelize db:create --env stage
+            npx sequelize db:migrate --env stage
+            npm run stop:stage
+            npm run start:stage 
