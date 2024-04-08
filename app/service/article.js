@@ -3,6 +3,13 @@ const { Service } = require('egg');
 class Article extends Service {
 
   async findArticleList({ tag, categoryId, page = 1, limit = 10 }) {
+    const where = {};
+    if (categoryId) {
+      where.categoryId = categoryId;
+    }
+    if (tag) {
+      where['$tags.name$'] = tag;
+    }
     return this.app.model.Article.findAndCountAll({
       include: [
         {
@@ -28,10 +35,7 @@ class Article extends Service {
         },
       ],
       subQuery: false,
-      where: {
-        categoryId,
-        '$tags.name$': tag,
-      },
+      where,
       limit,
       offset: (page - 1) * limit,
       order: [

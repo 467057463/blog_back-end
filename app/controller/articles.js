@@ -3,9 +3,26 @@ const { Controller } = require('egg');
 class ArticleController extends Controller {
   get indexQueryRule() {
     return {
-      limit: 'int',
-      page: 'int',
-      categoryId: 'int',
+      limit: {
+        type: 'int',
+        default: 10,
+        required: false,
+      },
+      page: {
+        type: 'int',
+        default: 1,
+        required: false,
+      },
+      categoryId: {
+        type: 'int',
+        default: 1,
+        required: false,
+      },
+      tag: {
+        type: 'string',
+        required: false,
+        default: '',
+      },
     };
   }
 
