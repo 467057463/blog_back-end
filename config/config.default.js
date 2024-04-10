@@ -20,6 +20,14 @@ module.exports = appInfo => {
       enable: true, // default is false
       match: '/jwt', // optional
     },
+
+    validate: {
+      convert: true,
+    },
+
+    bcrypt: {
+      saltRounds: 10, // default 10
+    },
   };
 
   // use for cookie sign key, should change to your own and keep security
@@ -30,13 +38,7 @@ module.exports = appInfo => {
 
   // add your user config here
   const userConfig = {
-    validate: {
-      convert: true,
-    },
 
-    bcrypt: {
-      saltRounds: 10, // default 10
-    },
   };
 
   return {

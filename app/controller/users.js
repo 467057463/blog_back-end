@@ -6,7 +6,7 @@ const { randomUUID } = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const pipeline = util.promisify(stream.pipeline);
-
+const { sendToWormhole } = require('stream-wormhole');
 
 class UserController extends Controller {
 
@@ -43,7 +43,7 @@ class UserController extends Controller {
 
 
   async updateProfile() {
-    const { ctx } = this;
+    const { ctx, app } = this;
     const parts = ctx.multipart();
     const currentUser = ctx.state.user.data.id;
 
@@ -62,12 +62,27 @@ class UserController extends Controller {
         fields[part[0]] = part[1];
       } else {
         const { filename, fieldname, encoding, mime } = part;
-        const targetPath = path.join(
-          uploadDir,
-          randomUUID() + path.extname(filename)
-        );
-        await pipeline(part, fs.createWriteStream(targetPath, { recursive: true }));
-        files[fieldname] = targetPath.replace(process.cwd(), '');
+        // const targetPath = path.join(
+        //   uploadDir,
+        //   randomUUID() + path.extname(filename)
+        // );
+        // await pipeline(part, fs.createWriteStream(targetPath, { recursive: true }));
+        // files[fieldname] = targetPath.replace(process.cwd(), '');
+        // let result;
+        try {
+          // console.log(sssss);
+          const result = await this.app.oss.put(
+            'blog_data/' + randomUUID() + path.extname(filename),
+            part
+          );
+          files[fieldname] = 'https://img.mmisme.cn/' + result.name;
+          // files[fieldname] = result.url;
+        } catch (error) {
+          // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+          await sendToWormhole(part);
+          ctx.throw(error);
+        }
+
       }
     }
     console.log(fields);
@@ -81,9 +96,9 @@ class UserController extends Controller {
         user_id: currentUser,
       });
     } else {
-      const originAvatar = profile.avatar && path.join(process.cwd(), profile.avatar);
-      if (originAvatar && fs.existsSync(originAvatar)) {
-        fs.rmSync(originAvatar);
+      const originAvatar = profile.avatar;
+      if (originAvatar) {
+        this.ctx.oss.delete(originAvatar.replace('https://img.mmisme.cn/', ''));
       }
       await profile.update({
         ...fields,

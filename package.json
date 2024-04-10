@@ -10,10 +10,12 @@
     "egg": "^3.17.5",
     "egg-bcrypt": "^1.1.0",
     "egg-jwt": "^3.1.7",
+    "egg-oss": "^3.1.0",
     "egg-scripts": "2",
     "egg-sequelize": "^6.0.0",
     "egg-validate": "^2.0.2",
-    "mysql2": "^3.9.1"
+    "mysql2": "^3.9.1",
+    "stream-wormhole": "^2.0.1"
   },
   "devDependencies": {
     "egg-bin": "6",

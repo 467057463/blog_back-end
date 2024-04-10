@@ -1,4 +1,5 @@
 const { Controller } = require('egg');
+const errorMap = require('../constant/errorMap');
 
 class AuthControll extends Controller {
 
@@ -7,22 +8,16 @@ class AuthControll extends Controller {
       username: {
         type: 'string',
         min: 6,
-        required: true,
-        allowEmpty: false,
         message: {
           min: '用户名长度不能小于6个字符串',
         },
       },
       password: {
         type: 'password',
-        required: true,
-        allowEmpty: false,
       },
       confirmPassword: {
         type: 'password',
         compare: 'password',
-        required: true,
-        allowEmpty: false,
       },
     };
   }
@@ -31,13 +26,9 @@ class AuthControll extends Controller {
     return {
       username: {
         type: 'string',
-        required: true,
-        allowEmpty: false,
       },
       password: {
         type: 'string',
-        required: true,
-        allowEmpty: false,
       },
     };
   }
@@ -52,12 +43,13 @@ class AuthControll extends Controller {
     // 使用用户名查询用户
     const user = await service.user.findByUserame(payload.username);
     if (!user) {
-      ctx.throw(404, 'user not found');
+      // ctx.throw(404, 'user not found');
+      return ctx.helper.success({ ctx, msg: errorMap[100000].message, code: 100000 });
     }
     // 匹配输入的密码
     const verifyPsw = await ctx.compare(payload.password, user.password);
     if (!verifyPsw) {
-      ctx.throw(404, 'user password is error');
+      return ctx.helper.success({ ctx, msg: errorMap[100000].message, code: 100000 });
     }
     // 匹配成功，生成 token
     const token = await service.user.generateToken(user.id);
