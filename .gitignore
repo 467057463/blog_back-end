@@ -18,4 +18,3 @@ typings/
 /config/config.prod.js
 /database/config.json
 upload/
-config/config.local.js
