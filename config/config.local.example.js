@@ -1,5 +1,6 @@
 module.exports = () => {
   return {
+    IMG_HOST: 'https://img.mmisme.cn',
     sequelize: {
       username: 'root',
       password: 'nandudu_',
@@ -10,11 +11,11 @@ module.exports = () => {
     },
     oss: {
       client: {
-        accessKeyId: 'LTAI5t9xcboV5FFEgx2ngU9y',
-        accessKeySecret: 'CuMyaOEPpzNnCKqL0ozFpmC3JtUFKA',
-        bucket: 'mmismeblog',
-        endpoint: 'oss-cn-wuhan-lr.aliyun.com',
-        timeout: '60s',
+        accessKeyId: '1',
+        accessKeySecret: '1',
+        bucket: '1',
+        endpoint: '1',
+        timeout: '1',
       },
     },
   };

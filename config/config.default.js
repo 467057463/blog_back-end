@@ -38,7 +38,7 @@ module.exports = appInfo => {
 
   // add your user config here
   const userConfig = {
-
+    IMG_HOST: 'https://img.mmisme.cn',
   };
 
   return {
