@@ -55,7 +55,7 @@ export default class UserController extends Controller {
       } else {
         const { filename, fieldname } = part;
         try {
-          const result = await this.app.oss.put(
+          const result = await ctx.oss.put(
             `blog_data_${this.app.env}/${randomUUID()}${path.extname(filename)}`,
             part,
           );
@@ -78,7 +78,7 @@ export default class UserController extends Controller {
     } else {
       const originAvatar = profile.avatar;
       if (originAvatar) {
-        await this.ctx.oss.delete(originAvatar.replace(this.config.IMG_HOST, ''));
+        await ctx.oss.delete(originAvatar.replace(this.config.IMG_HOST, ''));
       }
       await profile.update({
         ...fields,
