@@ -1,6 +1,6 @@
-const { Controller } = require('egg');
+import { Controller } from 'egg';
 
-class HomeController extends Controller {
+export default class HomeController extends Controller {
   async index() {
     const { ctx } = this;
     console.log(this.app.config);
@@ -9,4 +9,3 @@ class HomeController extends Controller {
   }
 }
 
-module.exports = HomeController;

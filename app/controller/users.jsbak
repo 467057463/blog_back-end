@@ -79,7 +79,7 @@ class UserController extends Controller {
     } else {
       const originAvatar = profile.avatar;
       if (originAvatar) {
-        this.ctx.oss.delete(originAvatar);
+        await this.ctx.oss.delete(originAvatar.replace(this.config.IMG_HOST, ''));
       }
       await profile.update({
         ...fields,

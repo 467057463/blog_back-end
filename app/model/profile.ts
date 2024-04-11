@@ -1,8 +1,4 @@
-'use strict';
-
-module.exports = app => {
-  // const { STRING, INTEGER, DATE } = app.Sequelize;
-
+export default app => {
   const Profile = app.model.define('profile', {
     id: {
       type: app.Sequelize.DataTypes.INTEGER.UNSIGNED,
@@ -15,6 +11,13 @@ module.exports = app => {
     },
     avatar: {
       type: app.Sequelize.DataTypes.STRING,
+      get() {
+        const val = (this as any).getDataValue('avatar');
+        if (val) {
+          return app.config.IMG_HOST + '/' + val;
+        }
+        return '';
+      },
     },
     email: {
       type: app.Sequelize.DataTypes.STRING(32),

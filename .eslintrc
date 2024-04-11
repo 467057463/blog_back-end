@@ -1,4 +1,7 @@
 {
-  "extends": "eslint-config-egg",
-  "root": true
+  "root": true,
+  "extends": [
+    "eslint-config-egg/typescript",
+    "eslint-config-egg/lib/rules/enforce-node-prefix"
+  ]
 }

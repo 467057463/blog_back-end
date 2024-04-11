@@ -4,25 +4,38 @@
   "description": "",
   "private": true,
   "egg": {
+    "typescript": true,
     "declarations": true
   },
   "dependencies": {
+    "@eggjs/tegg": "^3.5.2",
+    "@eggjs/tegg-aop-plugin": "^3.5.2",
+    "@eggjs/tegg-config": "^3.2.3",
+    "@eggjs/tegg-controller-plugin": "^3.5.2",
+    "@eggjs/tegg-eventbus-plugin": "^3.5.2",
+    "@eggjs/tegg-plugin": "^3.5.2",
+    "@eggjs/tegg-schedule-plugin": "^3.5.2",
     "egg": "^3.17.5",
     "egg-bcrypt": "^1.1.0",
     "egg-jwt": "^3.1.7",
     "egg-oss": "^3.1.0",
     "egg-scripts": "2",
+    "egg-tracer": "^2.0.0",
     "egg-sequelize": "^6.0.0",
     "egg-validate": "^2.0.2",
     "mysql2": "^3.9.1",
     "stream-wormhole": "^2.0.1"
   },
   "devDependencies": {
+    "@types/mocha": "10",
+    "@types/node": "20",
+    "@eggjs/tsconfig": "1",
     "egg-bin": "6",
     "egg-mock": "5",
     "eslint": "8",
     "eslint-config-egg": "13",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "typescript": "5"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -33,11 +46,13 @@
     "start:stage": "EGG_SERVER_ENV=stage egg-scripts start --daemon --title=blog_back-end:stage --port=7002",
     "stop:stage": "egg-scripts stop --title=blog_back-end:stage",
     "dev": "egg-bin dev",
+    "test:local": "egg-bin test -p",
     "test": "npm run lint -- --fix && npm run test:local",
-    "test:local": "egg-bin test",
-    "cov": "egg-bin cov",
-    "lint": "eslint .",
-    "ci": "npm run lint && npm run cov"
+    "cov": "egg-bin cov -p",
+    "ci": "npm run lint && npm run cov && npm run tsc && npm run clean",
+    "lint": "eslint . --ext .ts --cache",
+    "tsc": "tsc",
+    "clean": "tsc -b --clean"
   },
   "repository": {
     "type": "git",

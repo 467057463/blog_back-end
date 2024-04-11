@@ -1,0 +1,11 @@
+{
+  "extends": "@eggjs/tsconfig",
+  "compilerOptions": {
+    "declaration": false,
+    "paths": {
+      "@/module/*": ["app/module/*"],
+      "@/constant/*": ["app/constant/*"]
+    },
+    "baseUrl": "."
+  }
+}
