@@ -31,4 +31,5 @@ jobs:
             npx sequelize db:create --env stage
             npx sequelize db:migrate --env stage
             npm run stop:stage
+            npm run tsc
             npm run start:stage 
