@@ -14,6 +14,14 @@ export default app => {
       type: app.Sequelize.DataTypes.TEXT,
       allowNull: false,
     },
+    raw: {
+      type: app.Sequelize.DataTypes.TEXT,
+      allowNull: false,
+    },
+    describe: {
+      type: app.Sequelize.DataTypes.TEXT,
+      allowNull: false,
+    },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,
     },

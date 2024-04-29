@@ -53,7 +53,22 @@ export default class AuthControll extends Controller {
     }
     // 匹配成功，生成 token
     const token = await service.user.generateToken(user.id);
-    ctx.helper.success({ ctx, res: token, msg: '登录成功' });
+
+    const userInfo = await this.app.model.User.findByPk(user.id, {
+      include: [
+        {
+          model: this.ctx.model.Profile,
+          as: 'profile',
+          attributes: {
+            exclude: [ 'createdAt', 'updatedAt', 'user_id' ],
+          },
+        },
+      ],
+      attributes: {
+        exclude: [ 'createdAt', 'updatedAt', 'password' ],
+      },
+    });
+    ctx.helper.success({ ctx, res: { token, userInfo }, msg: '登录成功' });
   }
 
   async register() {
@@ -66,7 +81,22 @@ export default class AuthControll extends Controller {
     const user = await service.user.create(payload);
     // 生成 token
     const token = await service.user.generateToken(user.id);
-    ctx.helper.success({ ctx, res: token, msg: '注册成功' });
+
+    const userInfo = await this.app.model.User.findByPk(user.id, {
+      include: [
+        {
+          model: this.ctx.model.Profile,
+          as: 'profile',
+          attributes: {
+            exclude: [ 'createdAt', 'updatedAt', 'user_id' ],
+          },
+        },
+      ],
+      attributes: {
+        exclude: [ 'createdAt', 'updatedAt', 'password' ],
+      },
+    });
+    ctx.helper.success({ ctx, res: { token, userInfo }, msg: '注册成功' });
   }
 }
 

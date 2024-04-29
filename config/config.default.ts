@@ -21,6 +21,11 @@ export default (appInfo: EggAppInfo) => {
     bcrypt: {
       saltRounds: 10, // default 10
     },
+
+    cors: {
+      origin: '*',
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+    },
   } as PowerPartial<EggAppConfig>;
 
   // override config from framework / plugin

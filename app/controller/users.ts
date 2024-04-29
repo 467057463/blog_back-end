@@ -1,15 +1,14 @@
 // app/controller/users.js
-import { Controller } from 'egg';
+import { Controller } from "egg";
 // import stream from 'node:stream';
 // import util from 'node:util';
-import { randomUUID } from 'node:crypto';
+import { randomUUID } from "node:crypto";
 // import fs from 'node:fs';
-import path from 'node:path';
+import path from "node:path";
 // const pipeline = util.promisify(stream.pipeline);
-import { sendToWormhole } from 'stream-wormhole';
+import { sendToWormhole } from "stream-wormhole";
 
 export default class UserController extends Controller {
-
   async show() {
     const ctx = this.ctx;
     // 延迟加载
@@ -21,26 +20,25 @@ export default class UserController extends Controller {
       include: [
         {
           model: this.ctx.model.Article,
-          as: 'articles',
+          as: "articles",
           attributes: {
-            exclude: [ 'author_id', 'authorId' ],
+            exclude: ["author_id", "authorId"],
           },
         },
         {
           model: this.ctx.model.Profile,
-          as: 'profile',
+          as: "profile",
         },
         {
           model: this.ctx.model.Article,
-          as: 'likeArticles',
+          as: "likeArticles",
           attributes: {
-            exclude: [ 'author_id', 'authorId' ],
+            exclude: ["author_id", "authorId"],
           },
         },
       ],
     });
   }
-
 
   async updateProfile() {
     const { ctx } = this;
@@ -56,8 +54,10 @@ export default class UserController extends Controller {
         const { filename, fieldname } = part;
         try {
           const result = await ctx.oss.put(
-            `blog_data_${this.app.env}/${randomUUID()}${path.extname(filename)}`,
-            part,
+            `blog_data_${this.app.env}/${randomUUID()}${path.extname(
+              filename
+            )}`,
+            part
           );
           files[fieldname] = result.name;
         } catch (error) {
@@ -78,7 +78,7 @@ export default class UserController extends Controller {
     } else {
       const originAvatar = profile.avatar;
       if (originAvatar) {
-        await ctx.oss.delete(originAvatar.replace(this.config.IMG_HOST, ''));
+        await ctx.oss.delete(originAvatar.replace(this.config.IMG_HOST, ""));
       }
       await profile.update({
         ...fields,
@@ -86,6 +86,35 @@ export default class UserController extends Controller {
         user_id: currentUser,
       });
     }
-    ctx.helper.success({ ctx, res: await user.getProfile(), msg: '更新成功' });
+    ctx.helper.success({ ctx, res: await user.getProfile(), msg: "更新成功" });
+  }
+
+  async getUserInfo() {
+    const { ctx } = this;
+    const currentUser = ctx.state.user.data.id;
+    if (!currentUser) {
+      ctx.throw(404, "请求错误");
+      return;
+    }
+    const user = await this.app.model.User.findByPk(currentUser, {
+      include: [
+        {
+          model: this.ctx.model.Profile,
+          as: "profile",
+          attributes: {
+            exclude: ["createdAt", "updatedAt", "user_id"],
+          },
+        },
+      ],
+      attributes: {
+        exclude: ["createdAt", "updatedAt", "password"],
+      },
+    });
+    if (!user) {
+      ctx.throw(404, "请求错误");
+      return;
+    }
+    // return user;
+    ctx.helper.success({ ctx, res: user });
   }
 }

@@ -31,7 +31,7 @@ export default (app: Application) => {
   router.post('/login', controller.auth.login);
   router.post('/register', controller.auth.register);
   router.post('/update_profile', app.jwt as any, controller.users.updateProfile);
-
+  router.post('/getuser_info', app.jwt as any, controller.users.getUserInfo);
 
   router.get('/articles', controller.articles.index);
   router.get('/articles/:id', controller.articles.show);
