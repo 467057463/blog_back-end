@@ -120,6 +120,7 @@ export default class ArticleController extends Controller {
       return;
     }
 
+    await article.setTags([]);
     await article.destroy();
     ctx.helper.success({
       ctx,
