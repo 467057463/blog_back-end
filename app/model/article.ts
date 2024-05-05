@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export default app => {
   const Article = app.model.define('article', {
     id: {
@@ -14,16 +16,20 @@ export default app => {
       type: app.Sequelize.DataTypes.TEXT,
       allowNull: false,
     },
-    raw: {
-      type: app.Sequelize.DataTypes.TEXT,
-      allowNull: false,
-    },
+    // raw: {
+    //   type: app.Sequelize.DataTypes.TEXT,
+    //   // allowNull: false,
+    // },
     describe: {
       type: app.Sequelize.DataTypes.TEXT,
-      allowNull: false,
+      // allowNull: false,
     },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,
+      get() {
+        const rawValue = (this as any).getDataValue('createdAt');
+        return rawValue ? dayjs(rawValue).format('YYYY-MM-DD HH:mm') : null;
+      },
     },
     updatedAt: {
       type: app.Sequelize.DataTypes.DATE,

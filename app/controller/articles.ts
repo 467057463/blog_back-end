@@ -77,7 +77,7 @@ export default class ArticleController extends Controller {
 
     const tags = await this.app.model.Tag.findAll({
       where: {
-        name: ctx.request.body.tags,
+        id: ctx.request.body.tags,
       },
     });
     await article.setTags(tags);
@@ -102,7 +102,7 @@ export default class ArticleController extends Controller {
 
     const tags = await this.app.model.Tag.findAll({
       where: {
-        name: ctx.request.body.tags,
+        id: ctx.request.body.tags,
       },
     });
     await article.setTags(tags);

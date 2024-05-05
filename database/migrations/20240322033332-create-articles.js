@@ -16,6 +16,11 @@ module.exports = {
         field: 'title',
       },
       content: Sequelize.DataTypes.TEXT,
+      // raw: Sequelize.DataTypes.TEXT,
+      describe: {
+        type: Sequelize.DataTypes.TEXT,
+        field: 'describe',
+      },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',
