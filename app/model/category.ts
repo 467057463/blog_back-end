@@ -13,6 +13,17 @@ export default app => {
       allowNull: false,
       unique: true,
     },
+    label: {
+      type: app.Sequelize.DataTypes.STRING,
+      field: 'label',
+      allowNull: false,
+      unique: true,
+    },
+    order: {
+      type: app.Sequelize.DataTypes.INTEGER,
+      field: 'order',
+      allowNull: false,
+    },
   });
 
   Category.associate = () => {

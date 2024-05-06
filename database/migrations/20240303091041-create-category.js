@@ -17,6 +17,17 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
+      label: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'label',
+        allowNull: false,
+        unique: true,
+      },
+      order: {
+        type: Sequelize.DataTypes.INTEGER,
+        field: 'order',
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DataTypes.DATE,
         field: 'created_at',

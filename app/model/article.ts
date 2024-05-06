@@ -8,6 +8,16 @@ export default app => {
       autoIncrement: true,
       allowNull: false,
     },
+    cover: {
+      type: app.Sequelize.DataTypes.STRING,
+      get() {
+        const val = (this as any).getDataValue('cover');
+        if (val) {
+          return app.config.IMG_HOST + '/' + val;
+        }
+        return '';
+      },
+    },
     title: {
       type: app.Sequelize.DataTypes.STRING(16),
       allowNull: false,
@@ -16,13 +26,9 @@ export default app => {
       type: app.Sequelize.DataTypes.TEXT,
       allowNull: false,
     },
-    // raw: {
-    //   type: app.Sequelize.DataTypes.TEXT,
-    //   // allowNull: false,
-    // },
     describe: {
       type: app.Sequelize.DataTypes.TEXT,
-      // allowNull: false,
+      allowNull: false,
     },
     createdAt: {
       type: app.Sequelize.DataTypes.DATE,

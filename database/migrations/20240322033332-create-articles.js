@@ -11,15 +11,19 @@ module.exports = {
         autoIncrement: true,
         allowNull: false,
       },
+      cover: {
+        type: Sequelize.DataTypes.STRING,
+        field: 'cover',
+      },
       title: {
         type: Sequelize.DataTypes.STRING(64),
         field: 'title',
       },
       content: Sequelize.DataTypes.TEXT,
-      // raw: Sequelize.DataTypes.TEXT,
       describe: {
         type: Sequelize.DataTypes.TEXT,
         field: 'describe',
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DataTypes.DATE,

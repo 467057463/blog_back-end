@@ -1,4 +1,7 @@
 import { Controller } from 'egg';
+import { randomUUID } from 'node:crypto';
+import path from 'node:path';
+import { sendToWormhole } from 'stream-wormhole';
 
 export default class ArticleController extends Controller {
   get indexQueryRule() {
@@ -65,19 +68,57 @@ export default class ArticleController extends Controller {
   }
 
   async create() {
-    const { ctx } = this;
-    const user = ctx.state.user;
+    const { ctx, app } = this;
+    const parts = ctx.multipart();
+    const currentUser = ctx.state.user.data.id;
+    const fields = {};
+    const files = {};
+
+    for await (const part of parts as any) {
+      console.log('part', part);
+      if (Array.isArray(part)) {
+        if (fields[part[0]]) {
+          fields[part[0]] = [
+            ...fields[part[0]],
+            part[1],
+          ];
+        } else {
+          fields[part[0]] = part[1];
+        }
+      } else {
+        const { filename, fieldname } = part;
+        try {
+          const result = await ctx.oss.put(
+            `blog_data_${this.app.env}/${randomUUID()}${path.extname(
+              filename,
+            )}`,
+            part,
+          );
+          files[fieldname] = result.name;
+        } catch (error) {
+          // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+          await sendToWormhole(part);
+          ctx.throw(error as any);
+        }
+      }
+    }
+
+
     // 校验参数
-    ctx.validate(this.createArticleRule);
+    app.validator.validate(this.createArticleRule, {
+      ...fields,
+      ...files,
+    });
 
     const article = await ctx.model.Article.create({
-      ...ctx.request.body,
-      authorId: user.data.id,
+      ...fields,
+      ...files,
+      authorId: currentUser,
     });
 
     const tags = await this.app.model.Tag.findAll({
       where: {
-        id: ctx.request.body.tags,
+        id: (fields as any).tags,
       },
     });
     await article.setTags(tags);
@@ -87,22 +128,66 @@ export default class ArticleController extends Controller {
   }
 
   async update() {
-    const { ctx } = this;
-    const user = ctx.state.user;
+    const { ctx, app } = this;
+    const parts = ctx.multipart();
+    const currentUser = ctx.state.user.data.id;
+    const fields = {};
+    const files = {};
+
     const article = await ctx.service.article.findById(ctx.params.id);
-    if (!article || article.authorId !== user.data.id) {
+    if (!article || article.authorId !== currentUser) {
       ctx.throw(404, 'article not found');
       return;
     }
 
-    // 校验参数
-    ctx.validate(this.createArticleRule);
+    for await (const part of parts as any) {
+      console.log('part', part);
+      if (Array.isArray(part)) {
+        if (fields[part[0]]) {
+          fields[part[0]] = [
+            ...fields[part[0]],
+            part[1],
+          ];
+        } else {
+          fields[part[0]] = part[1];
+        }
+      } else {
+        const { filename, fieldname } = part;
+        try {
+          const result = await ctx.oss.put(
+            `blog_data_${this.app.env}/${randomUUID()}${path.extname(
+              filename,
+            )}`,
+            part,
+          );
+          files[fieldname] = result.name;
+        } catch (error) {
+          // 必须将上传的文件流消费掉，要不然浏览器响应会卡死
+          await sendToWormhole(part);
+          ctx.throw(error as any);
+        }
+      }
+    }
 
-    await article.update(ctx.request.body);
+    // 校验参数
+    app.validator.validate(this.createArticleRule, {
+      ...fields,
+      ...files,
+    });
+
+    const originCover = article.cover;
+    if (originCover) {
+      await ctx.oss.delete(originCover.replace(this.config.IMG_HOST, ''));
+    }
+
+    await article.update({
+      ...fields,
+      ...files,
+    });
 
     const tags = await this.app.model.Tag.findAll({
       where: {
-        id: ctx.request.body.tags,
+        id: (fields as any).tags,
       },
     });
     await article.setTags(tags);
