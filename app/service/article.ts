@@ -77,6 +77,13 @@ export default class Article extends Service {
             attributes: [],
           },
         },
+        {
+          model: this.ctx.model.Draft,
+          as: 'draft',
+          attributes: {
+            exclude: [ 'createdAt', 'updatedAt' ],
+          },
+        },
       ],
     });
   }

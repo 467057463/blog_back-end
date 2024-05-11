@@ -42,6 +42,9 @@ export default (app: Application) => {
   router.get('/tags', controller.articles.tags);
   router.get('/categories', controller.articles.categories);
 
+  router.post('/drafts/:id', app.jwt as any, controller.drafts.update);
+  router.post('/drafts', app.jwt as any, controller.drafts.create);
+
   // router.resources('users', '/users', controller.users);
   // 学习一对多关联
   router.get('/users/:id', controller.users.show);

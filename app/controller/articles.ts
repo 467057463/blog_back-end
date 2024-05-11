@@ -176,7 +176,7 @@ export default class ArticleController extends Controller {
     });
 
     const originCover = article.cover;
-    if (originCover) {
+    if (originCover && (files as any).cover) {
       await ctx.oss.delete(originCover.replace(this.config.IMG_HOST, ''));
     }
 

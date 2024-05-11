@@ -70,6 +70,8 @@ export default app => {
       as: 'category',
       foreignKey: 'category_id',
     });
+
+    Article.hasOne(app.model.Draft);
   };
 
   return Article;

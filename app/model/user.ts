@@ -37,6 +37,11 @@ export default app => {
       as: 'articles',
     });
 
+    User.hasMany(app.model.Draft, {
+      foreignKey: 'author_id',
+      as: 'drafts',
+    });
+
     User.belongsToMany(app.model.Article, {
       through: app.model.UserLikeArticle,
       as: 'likeArticles',
