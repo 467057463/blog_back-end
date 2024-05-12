@@ -44,6 +44,7 @@ export default (app: Application) => {
 
   router.post('/drafts/:id', app.jwt as any, controller.drafts.update);
   router.post('/drafts', app.jwt as any, controller.drafts.create);
+  router.get('/drafts/:id', app.jwt as any, controller.drafts.show);
 
   // router.resources('users', '/users', controller.users);
   // 学习一对多关联

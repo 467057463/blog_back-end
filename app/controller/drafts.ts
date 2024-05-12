@@ -60,4 +60,40 @@ export default class DraftController extends Controller {
 
     ctx.helper.success({ ctx, res: draft, msg: '草稿更新成功' });
   }
+
+  async show() {
+    const { ctx } = this;
+    const currentUser = ctx.state.user.data.id;
+    const draft = await ctx.model.Draft.findByPk(ctx.params.id, {
+      include: [
+        {
+          model: ctx.model.Article,
+          as: 'article',
+          attributes: {
+            exclude: [ 'createdAt', 'updatedAt' ],
+          },
+          include: {
+            model: this.ctx.model.Tag,
+            as: 'tags',
+            attributes: {
+              exclude: [ 'createdAt', 'updatedAt' ],
+            },
+            through: {
+              attributes: [],
+            },
+          },
+        },
+      ],
+    });
+
+    if (!draft || draft.authorId !== currentUser) {
+      ctx.throw(404, 'drafts not found');
+      return;
+    }
+
+    ctx.helper.success({
+      ctx,
+      res: draft,
+    });
+  }
 }
