@@ -123,8 +123,16 @@ export default class ArticleController extends Controller {
     });
     await article.setTags(tags);
 
-    const res = await ctx.service.article.findById(article.id);
-    ctx.helper.success({ ctx, res });
+    const articleRes = await ctx.service.article.findById(article.id);
+    if (articleRes.draft) {
+      await articleRes.setDraft(null);
+      await ctx.model.Draft.destroy({
+        where: {
+          id: articleRes.draft.id,
+        },
+      });
+    }
+    ctx.helper.success({ ctx, res: articleRes });
   }
 
   async update() {
@@ -192,8 +200,16 @@ export default class ArticleController extends Controller {
     });
     await article.setTags(tags);
 
-    const res = await ctx.service.article.findById(article.id);
-    ctx.helper.success({ ctx, res });
+    const articleRes = await ctx.service.article.findById(article.id);
+    if (articleRes.draft) {
+      await articleRes.setDraft(null);
+      await ctx.model.Draft.destroy({
+        where: {
+          id: articleRes.draft.id,
+        },
+      });
+    }
+    ctx.helper.success({ ctx, res: articleRes });
   }
 
   async destroy() {
