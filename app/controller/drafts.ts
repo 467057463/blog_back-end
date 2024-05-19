@@ -2,6 +2,21 @@ import { Controller } from 'egg';
 
 export default class DraftController extends Controller {
 
+  get indexQueryRule() {
+    return {
+      limit: {
+        type: 'int',
+        default: 10,
+        required: false,
+      },
+      page: {
+        type: 'int',
+        default: 1,
+        required: false,
+      },
+    };
+  }
+
   get draftRule() {
     return {
       title: {
@@ -17,6 +32,25 @@ export default class DraftController extends Controller {
         required: false,
       },
     };
+  }
+
+  async index() {
+    const { ctx } = this;
+    // 校验参数
+    ctx.validate(this.indexQueryRule, ctx.query);
+
+    const currentUser = ctx.state.user.data.id;
+
+    const res = await ctx.model.Draft.findAll({
+      where: {
+        authorId: currentUser,
+      },
+    });
+
+    ctx.helper.success({
+      ctx,
+      res,
+    });
   }
 
   async create() {
@@ -94,6 +128,24 @@ export default class DraftController extends Controller {
     ctx.helper.success({
       ctx,
       res: draft,
+    });
+  }
+
+  async destroy() {
+    const { ctx } = this;
+    const user = ctx.state.user;
+
+    const draft = await ctx.model.Draft.findByPk(ctx.params.id);
+
+    if (!draft || draft.authorId !== user.data.id) {
+      ctx.throw(404, 'draft not found');
+      return;
+    }
+
+    await draft.destroy();
+    ctx.helper.success({
+      ctx,
+      msg: '删除成功',
     });
   }
 }

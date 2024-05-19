@@ -42,9 +42,11 @@ export default (app: Application) => {
   router.get('/tags', controller.articles.tags);
   router.get('/categories', controller.articles.categories);
 
+  router.get('/drafts', app.jwt as any, controller.drafts.index);
   router.post('/drafts/:id', app.jwt as any, controller.drafts.update);
   router.post('/drafts', app.jwt as any, controller.drafts.create);
   router.get('/drafts/:id', app.jwt as any, controller.drafts.show);
+  router.delete('/drafts/:id', app.jwt as any, controller.drafts.destroy);
 
   // router.resources('users', '/users', controller.users);
   // 学习一对多关联
