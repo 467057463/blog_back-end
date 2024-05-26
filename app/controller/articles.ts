@@ -253,6 +253,15 @@ export default class ArticleController extends Controller {
     });
   }
 
+  async hots() {
+    const { ctx } = this;
+
+    ctx.helper.success({
+      ctx,
+      res: await ctx.service.article.hotArticles(),
+    });
+  }
+
   async tags() {
     const { ctx } = this;
     const res = await this.app.model.Tag.findAll({

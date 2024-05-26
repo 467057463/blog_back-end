@@ -34,6 +34,7 @@ export default (app: Application) => {
   router.post('/getuser_info', app.jwt as any, controller.users.getUserInfo);
 
   router.get('/articles', controller.articles.index);
+  router.get('/articles/hots', controller.articles.hots);
   router.get('/articles/:id', controller.articles.show);
   router.post('/articles', app.jwt as any, controller.articles.create);
   router.post('/articles/:id', app.jwt as any, controller.articles.update);

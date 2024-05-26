@@ -100,6 +100,32 @@ export default class Article extends Service {
       },
     });
   }
+
+  async hotArticles() {
+    return this.app.model.Article.findAll({
+      attributes: {
+        include: [
+          // [ this.app.Sequelize.fn('COUNT', this.app.Sequelize.col('tag.id')), 'teachers' ],
+          // [ this.app.Sequelize.fn('COUNT', this.app.Sequelize.fn('DISTINCT', this.app.Sequelize.col('tags'))), 'pupils' ],
+          // [ this.app.Sequelize.fn('COUNT', this.app.Sequelize.col('tags')), 'n_hats' ],
+        ],
+      },
+      include: [
+        {
+          model: this.app.model.Tag,
+          as: 'tags',
+        },
+      ],
+      where: {
+        categoryId: 1,
+      },
+      order: [
+        [ 'createdAt', 'DESC' ],
+      ],
+      limit: 10,
+      distinct: true,
+    });
+  }
 }
 
 module.exports = Article;
