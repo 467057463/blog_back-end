@@ -119,9 +119,10 @@ export default class Article extends Service {
       where: {
         categoryId: 1,
       },
-      order: [
-        [ 'createdAt', 'DESC' ],
-      ],
+      // order: [
+      //   [ 'createdAt', 'DESC' ],
+      // ],
+      ordeer: [ this.app.Sequelize.literal('rand()') ],
       limit: 10,
       distinct: true,
     });

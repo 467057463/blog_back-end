@@ -16,7 +16,7 @@ export default class User extends Service {
       data: {
         id,
       },
-      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 7),
+      exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 30),
     }, ctx.app.config.jwt.secret);
   }
 }

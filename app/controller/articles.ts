@@ -131,6 +131,12 @@ export default class ArticleController extends Controller {
           id: articleRes.draft.id,
         },
       });
+    } else {
+      await ctx.model.Draft.destroy({
+        where: {
+          id: (fields as any).draftId,
+        },
+      });
     }
     ctx.helper.success({ ctx, res: articleRes });
   }
