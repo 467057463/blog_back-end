@@ -30,7 +30,18 @@ export default class AuthControll extends Controller {
       password: {
         type: 'string',
       },
+      code: {
+        type: 'string',
+      },
     };
+  }
+
+  async getCaptcha() {
+    const { ctx, service } = this;
+    const captcha = await service.user.captcha(); // 服务里面的方法
+    // ctx.response.type = 'image/svg+xml'; // 知道你个返回的类型
+    // ctx.body = captcha.data; // 返回一张图片
+    ctx.helper.success({ ctx, res: captcha.data });
   }
 
   async login() {
@@ -39,6 +50,15 @@ export default class AuthControll extends Controller {
     ctx.validate(this.loginRule);
     // 组装参数
     const payload = ctx.request.body || {};
+
+    // 验证码
+    const code = ctx.session.code;
+    if (code == null) {
+      return ctx.helper.success({ ctx, msg: errorMap[100001].message, code: 100001 });
+    }
+    if (code.toLowerCase() !== payload.code.toLowerCase()) {
+      return ctx.helper.success({ ctx, msg: errorMap[100002].message, code: 100002 });
+    }
 
     // 使用用户名查询用户
     const user = await service.user.findByUserame(payload.username);

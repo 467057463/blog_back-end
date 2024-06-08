@@ -29,6 +29,7 @@ export default (app: Application) => {
 
   router.get('/', app.jwt as any, controller.home.index);
   router.post('/login', controller.auth.login);
+  router.get('/captcha', controller.auth.getCaptcha);
   router.post('/register', controller.auth.register);
   router.post('/update_profile', app.jwt as any, controller.users.updateProfile);
   router.post('/getuser_info', app.jwt as any, controller.users.getUserInfo);

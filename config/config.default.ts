@@ -25,6 +25,7 @@ export default (appInfo: EggAppInfo) => {
     cors: {
       origin: '*',
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+      credentials: true,
     },
   } as PowerPartial<EggAppConfig>;
 

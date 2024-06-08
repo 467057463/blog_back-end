@@ -26,7 +26,8 @@
     "egg-tracer": "^2.0.0",
     "egg-validate": "^2.0.2",
     "mysql2": "^3.9.1",
-    "stream-wormhole": "^2.0.1"
+    "stream-wormhole": "^2.0.1",
+    "svg-captcha": "^1.4.0"
   },
   "devDependencies": {
     "@eggjs/tsconfig": "1",
