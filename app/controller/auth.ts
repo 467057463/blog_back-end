@@ -39,8 +39,6 @@ export default class AuthControll extends Controller {
   async getCaptcha() {
     const { ctx, service } = this;
     const captcha = await service.user.captcha(); // 服务里面的方法
-    // ctx.response.type = 'image/svg+xml'; // 知道你个返回的类型
-    // ctx.body = captcha.data; // 返回一张图片
     ctx.helper.success({ ctx, res: captcha.data });
   }
 
@@ -53,25 +51,44 @@ export default class AuthControll extends Controller {
 
     // 验证码
     const code = ctx.session.code;
+    // 验证码过期
     if (code == null) {
-      return ctx.helper.success({ ctx, msg: errorMap[100001].message, code: 100001 });
+      return ctx.helper.success({
+        ctx,
+        msg: errorMap[100001].message,
+        code: 100001,
+      });
     }
+    // 验证码错误
     if (code.toLowerCase() !== payload.code.toLowerCase()) {
-      return ctx.helper.success({ ctx, msg: errorMap[100002].message, code: 100002 });
+      return ctx.helper.success({
+        ctx,
+        msg: errorMap[100002].message,
+        code: 100002,
+      });
     }
 
     // 使用用户名查询用户
     const user = await service.user.findByUserame(payload.username);
+    // 用户名不存在
     if (!user) {
-      // ctx.throw(404, 'user not found');
-      return ctx.helper.success({ ctx, msg: errorMap[100000].message, code: 100000 });
+      return ctx.helper.success({
+        ctx,
+        msg: errorMap[100000].message,
+        code: 100000,
+      });
     }
     // 匹配输入的密码
     const verifyPsw = await ctx.compare(payload.password, user.password);
+    // 密码错误
     if (!verifyPsw) {
-      return ctx.helper.success({ ctx, msg: errorMap[100000].message, code: 100000 });
+      return ctx.helper.success({
+        ctx,
+        msg: errorMap[100000].message,
+        code: 100000,
+      });
     }
-    // 匹配成功，生成 token
+    // 匹配成功，生成 token 并和 userInfo一起返回
     const token = await service.user.generateToken(user.id);
 
     const userInfo = await this.app.model.User.findByPk(user.id, {
